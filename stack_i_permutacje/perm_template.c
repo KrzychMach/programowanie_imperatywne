@@ -22,7 +22,16 @@ void rand_permutation(int n, int tab[]);
 // np. dla { 0 1 2 3 7 4 5 6 } -> 1, 
 //     dla { 1 2 3 7 4 5 6 0 } -> 7, 
 //     dla { 0 1 2 3 4 5 6 7 } -> 0. 
-int bubble_sort(int n,int tab[]);
+int bubble_sort(int n,int tab[]){
+    int counter = 0, changes = 1, temp;
+    while (1){
+        changes = 0;
+        for (int i = 0; i < n - 1; ++i) {
+            if ()
+        }
+
+    }
+}
 
 int main(void) {
 	int nr_testu, seed;
