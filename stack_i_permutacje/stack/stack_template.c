@@ -10,7 +10,6 @@
 
 
 //TODO
-//  queue
 //  cbuff
 
 
@@ -51,11 +50,40 @@ int in = 0, curr_nr = 0;
 
 // ONE OVERFLOW for many resigning
 
-void queue_push(int in_nr);
+void queue_push(int in_nr){
+    for (int i = 0; i < in_nr; ++i) {
+        if (in == QUEUE_SIZE){
+            printf("%s ", "OVERFLOW");
+            curr_nr += in_nr - i;
+            return;
+        } else {
+            queue[in++] = ++curr_nr;
+        }
+    }
+}
 
-void queue_pop(int out_nr);
+void queue_pop(int out_nr){
+    if (out_nr > in) {
+        printf("%s ", "UNDERFLOW");
+        in = 0;
+        return;
+    } else {
+        for (int i = 0; i < in; ++i) {
+            queue[i] = queue[out_nr + i];
+        }
+        in = in - out_nr;
+    }
+}
 
-void queue_state(void);
+void queue_state(void){
+    if (in == 0){
+        printf("%s ", "EMPTY");
+    } else {
+        for (int i = 0; i < in; ++i) {
+            printf("%d ", queue[i]);
+        }
+    }
+}
 
 // Queue with cyclic buffer
 
