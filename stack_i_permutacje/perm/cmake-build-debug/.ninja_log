@@ -1,0 +1,15 @@
+# ninja log v5
+1	125	6686039600332385	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+127	291	6686039602060338	perm.exe	3d960f2d6bed345a
+2	105	6686043657759379	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+105	271	6686043659452136	perm.exe	3d960f2d6bed345a
+2	116	6686043967411375	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+116	266	6686043968850943	perm.exe	3d960f2d6bed345a
+3	105	6686044078297664	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+106	262	6686044079834099	perm.exe	3d960f2d6bed345a
+3	105	6686044255654751	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+105	262	6686044257278058	perm.exe	3d960f2d6bed345a
+3	109	6686045062102295	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+110	265	6686045063688623	perm.exe	3d960f2d6bed345a
+2	134	6686056840017893	CMakeFiles/perm.dir/perm_template.c.obj	8eb420a8f1fe65f
+135	330	6686056841866810	perm.exe	3d960f2d6bed345a

@@ -1,3 +1,0 @@
-E:/Krzysztof/repozytoria/programowanie_imperatywne/stack_i_permutacje/cmake-build-debug/CMakeFiles/stack_i_permutacje.dir
-E:/Krzysztof/repozytoria/programowanie_imperatywne/stack_i_permutacje/cmake-build-debug/CMakeFiles/edit_cache.dir
-E:/Krzysztof/repozytoria/programowanie_imperatywne/stack_i_permutacje/cmake-build-debug/CMakeFiles/rebuild_cache.dir
