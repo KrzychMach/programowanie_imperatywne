@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "E:/Krzysztof/repozytoria/programowanie_imperatywne/stack_i_permutacje/stack/cmake-build-debug",
-		"source" : "E:/Krzysztof/repozytoria/programowanie_imperatywne/stack_i_permutacje/stack"
+		"build" : "C:/Krzysztof/repozytoria/GitHub/programowanie_imperatywne/stack_i_permutacje/stack/cmake-build-debug",
+		"source" : "C:/Krzysztof/repozytoria/GitHub/programowanie_imperatywne/stack_i_permutacje/stack"
 	},
 	"version" : 
 	{

@@ -1,0 +1,1 @@
+CMakeLists.txt not found in C:\Krzysztof\repozytoria\GitHub\programowanie_imperatywne\stack_i_permutacje\stack Select CMakeLists.txt
