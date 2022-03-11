@@ -93,11 +93,33 @@ int cbuff[CBUFF_SIZE];
 int out=0, len=0;
 
 
-void cbuff_push(int cli_nr);
+void cbuff_push(int cli_nr){
+    if (len == CBUFF_SIZE){
+        printf("%s ", "OVERFLOW");
+    } else {
+        cbuff[(out + len++) % CBUFF_SIZE] = cli_nr;
+    }
+}
 
-void cbuff_pop(void);
+void cbuff_pop(void){
+    if (len == 0){
+        printf("%s ", "UNDERFLOW");
+    } else {
+        out = ++out % CBUFF_SIZE;
+        --len;
+    }
+}
 
-void cbuff_state(void);
+void cbuff_state(void){
+    if (len == 0){
+        printf("%s ", "EMPTY");
+    } else {
+        for (int i = 0; i < len; ++i) {
+            printf("%d ", cbuff[(out + i) % CBUFF_SIZE]);
+        }
+    }
+}
+
 
 int main(void) {
 	int to_do, n, client_no, op_code;
