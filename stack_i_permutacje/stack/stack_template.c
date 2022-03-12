@@ -6,11 +6,7 @@
 #define OK        0 
 #define EMPTY    -1
 #define FULL     -2
-#define OVERFLOW -3
-
-
-//TODO
-//  cbuff
+#define OVERFLOW1 -3
 
 
 double stack[STACK_SIZE];
@@ -18,7 +14,8 @@ int top = 0;
 
 int stack_push(double x){
     if (top == STACK_SIZE){
-        return OVERFLOW;
+        printf("%s ", "OVERFLOW");
+        return OVERFLOW1;
     } else {
         stack[top++] = x;
         return OK;
