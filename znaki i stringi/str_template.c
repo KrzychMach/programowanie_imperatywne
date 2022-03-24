@@ -56,8 +56,6 @@ void wc(int *nl, int *nw, int *nc){
             in_word = 0;
         }
     }
-    *nl += 1;
-    *nc += 1;
 }
 
 // count how many times each character from [FIRST_CHAR, LAST_CHAR) occurs
@@ -93,11 +91,65 @@ void char_count(int char_no, int *n_char, int *cnt) {
 // to their respective cardinalities (decreasing order). Set digram[0] and
 // digram[1] to the first and the second char in the digram_no - th digram_char
 // in the sorted list. Set digram[2] to its cardinality.
-void digram_count(int digram_no, int digram[]);
+void digram_count(int digram_no, int digram[]) {
+    int digrams[(LAST_CHAR - FIRST_CHAR) * (LAST_CHAR - FIRST_CHAR)], prev_char, curr_char, j,
+        to_sort[(LAST_CHAR - FIRST_CHAR) * (LAST_CHAR - FIRST_CHAR)], temp;
+
+    for (int i = 0; i < (LAST_CHAR - FIRST_CHAR) * (LAST_CHAR - FIRST_CHAR); ++i) {
+        digrams[i] = 0;
+        to_sort[i] = i;
+    }
+
+    prev_char = getchar();
+    while ((curr_char = getchar()) != EOF) {
+        if (prev_char >= FIRST_CHAR && prev_char < LAST_CHAR &&
+                curr_char >= FIRST_CHAR && curr_char < LAST_CHAR) {
+            digrams[(prev_char - FIRST_CHAR) * (LAST_CHAR - FIRST_CHAR) + (curr_char - FIRST_CHAR)] += 1;
+        }
+        prev_char = curr_char;
+    }
+
+    for (int i = 0; i < (LAST_CHAR - FIRST_CHAR) * (LAST_CHAR - FIRST_CHAR); ++i) {
+        j = i;
+        while (j > 0 && digrams[to_sort[j]] > digrams[to_sort[j - 1]]) {
+            temp = to_sort[j - 1];
+            to_sort[j - 1] = to_sort[j];
+            to_sort[j] = temp;
+            --j;
+        }
+    }
+
+    digram[2] = digrams[to_sort[digram_no - 1]];
+    digram[1] = (to_sort[digram_no - 1] % (LAST_CHAR - FIRST_CHAR)) + FIRST_CHAR;
+    digram[0] = ((to_sort[digram_no - 1] - (to_sort[digram_no - 1] % (LAST_CHAR - FIRST_CHAR))) / (LAST_CHAR - FIRST_CHAR)) + FIRST_CHAR;
+}
 
 // Count block and line comments in the text read from stdin. Set
 // line_comment_counter and block_comment_counter accordingly
-void find_comments(int *line_comment_counter, int *block_comment_counter);
+void find_comments(int *line_comment_counter, int *block_comment_counter){
+    *line_comment_counter = *block_comment_counter = 0;
+    int found_line_comment = 0, prev_char, curr_char, in_block_comment = 0;
+    prev_char = getchar();
+    while ((curr_char = getchar()) != EOF) {
+        if (in_block_comment) {
+            if (prev_char == '*' && curr_char == '/') {
+                in_block_comment = 0;
+            }
+        } else {
+            if (prev_char == '/' && curr_char == '*') {
+                in_block_comment = 1;
+                *block_comment_counter += 1;
+            } else if (prev_char == '/' && curr_char == '/' && found_line_comment == 0) {
+                *line_comment_counter += 1;
+                found_line_comment = 1;
+            }
+        }
+        if (curr_char == '\n'){
+            found_line_comment = 0;
+        }
+        prev_char = curr_char;
+    }
+}
 
 #define MAX_LINE 128
 
@@ -142,4 +194,3 @@ int main(void) {
 	}
 	return 0;
 }
-
