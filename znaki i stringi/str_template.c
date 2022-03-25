@@ -128,25 +128,48 @@ void digram_count(int digram_no, int digram[]) {
 // line_comment_counter and block_comment_counter accordingly
 void find_comments(int *line_comment_counter, int *block_comment_counter){
     *line_comment_counter = *block_comment_counter = 0;
-    int found_line_comment = 0, prev_char, curr_char, in_block_comment = 0;
+    int in_line_comment = 0, prev_char, curr_char, in_block_comment = 0;
     prev_char = getchar();
     while ((curr_char = getchar()) != EOF) {
-        if (in_block_comment) {
+        if (in_line_comment) {
+            if (curr_char == '\n') {
+                in_line_comment = 0;
+            }
+        } else if (in_block_comment) {
             if (prev_char == '*' && curr_char == '/') {
                 in_block_comment = 0;
             }
-        } else {
-            if (prev_char == '/' && curr_char == '*') {
-                in_block_comment = 1;
-                *block_comment_counter += 1;
-            } else if (prev_char == '/' && curr_char == '/' && found_line_comment == 0) {
-                *line_comment_counter += 1;
-                found_line_comment = 1;
-            }
+        } else if (prev_char == '/' && curr_char == '*') {
+            *block_comment_counter += 1;
+            in_block_comment = 1;
+            prev_char = curr_char;
+            curr_char = getchar();
+        } else if (prev_char == '/' && curr_char == '/') {
+            *line_comment_counter += 1;
+            in_line_comment = 1;
+            prev_char = curr_char;
+            curr_char = getchar();
         }
-        if (curr_char == '\n'){
-            found_line_comment = 0;
-        }
+//        if (in_block_comment) {
+//            if (prev_char == '*' && curr_char == '/') {
+//                in_block_comment = 0;
+//                prev_char = curr_char;
+//                if ((curr_char = getchar()) == EOF) break;
+//            }
+//        } else {
+//            if (prev_char == '/' && curr_char == '*') {
+//                in_block_comment = 1;
+//                *block_comment_counter += 1;
+//                prev_char = curr_char;
+//                if ((curr_char = getchar()) == EOF) break;
+//            } else if (prev_char == '/' && curr_char == '/' && found_line_comment == 0) {
+//                *line_comment_counter += 1;
+//                found_line_comment = 1;
+//            }
+//        }
+//        if (curr_char == '\n'){
+//            found_line_comment = 0;
+//        }
         prev_char = curr_char;
     }
 }
