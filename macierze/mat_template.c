@@ -38,7 +38,20 @@ void print_mat_ind(double A[][SIZE], int m, int n, const int indices[]);
 // 5.1
 // Calculate matrix product, AB = A X B
 // A[m][p], B[p][n]
-void mat_product(double A[][SIZE], double B[][SIZE], double AB[][SIZE], int m, int p, int n);
+void mat_product(double A[][SIZE], double B[][SIZE], double AB[][SIZE], int m, int p, int n){
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            AB[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            for (int k = 0; k < p; ++k) {
+                AB[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
 
 // Calculate matrix - vector product
 void mat_vec_product(double A[][SIZE], const double b[], double Ab[], int m, int n);
@@ -51,7 +64,22 @@ void backward_substitution_index(double A[][SIZE], const int indices[], double x
 // Matrix triangulation and determinant calculation - simplified version
 // (no rows' swaps). If A[i][i] == 0, function returns NAN.
 // Function may change A matrix elements.
-double gauss_simplified(double A[][SIZE], int n);
+double gauss_simplified(double A[][SIZE], int n){
+    int ratio, product=1;
+    for (int step = 0; step < n - 1; ++step) {
+        if (A[step][step] == 0) return NAN;
+        for (int i = step + 1; i < n; ++i) {
+            ratio = A[i][step] / A[step][step];
+            for (int j = 0; j < n; ++j) {
+                A[i][j] -= A[step][j] * ratio;
+            }
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        product *= A[i][i];
+    }
+    return product;
+}
 
 // 5.3
 // Matrix triangulation, determinant calculation, and Ax = b solving - extended version
@@ -60,12 +88,68 @@ double gauss_simplified(double A[][SIZE], int n);
 // If max A[i][i] < eps, function returns 0.
 // If det != 0 && b != NULL && x != NULL then vector x should contain solution of Ax = b.
 
-double gauss(double A[][SIZE], const double b[], double x[], const int n, const double eps);
+double gauss(double A[][SIZE], const double b[], double x[], const int n, const double eps){
+    int max_ind, temp;
+    double ratio;
+
+    int indices_arr[n];
+    for (int i = 0; i < n; ++i) {
+        indices_arr[i] = i;
+    }
+
+    for (int step = 0; step < n - 1; ++step) {
+
+        max_ind = step;
+        for (int i = step + 1; i < n; ++i) {
+            if (fabs(A[indices_arr[i]][step]) > fabs(A[indices_arr[max_ind]][step])) {
+                max_ind = i;
+            }
+        }
+        if (max_ind != step) {
+            temp = indices_arr[max_ind];
+            indices_arr[max_ind] = indices_arr[step];
+            indices_arr[step] = temp;
+        }
+
+        if (fabs(A[indices_arr[step]][step]) < eps) {
+            return 0;
+        }
+
+        for (int i = step + 1; i < n; ++i) {
+            ratio = A[indices_arr[i]][step] / A[indices_arr[step]][step];
+            for (int j = step; j < n; ++j) {
+                double hehe = ratio * A[indices_arr[step]][j];
+                A[indices_arr[i]][j] -= hehe;
+            }
+        }
+
+    }
+
+    double determinant = 1;
+    for (int i = 0; i < n; ++i) {
+        determinant *= A[indices_arr[i]][i];
+    }
+    // TU UZYJE matrix_inv
+}
 
 // 5.4
 // Returns the determinant; B contains the inverse of A (if det(A) != 0)
 // If max A[i][i] < eps, function returns 0.
-double matrix_inv(double A[][SIZE], double B[][SIZE], int n, double eps);
+double matrix_inv(double A[][SIZE], double B[][SIZE], int n, double eps){
+    int max_index;
+    double temp[SIZE];
+    for (int step = 0; step < n - 1; ++step) {
+        max_index = step;
+        for (int i = step + 1; i < n; ++i) {
+            if (A[i][step] > A[max_index][step]) {
+                max_index = i;
+            }
+        }
+        if (max_index != step) {
+
+        }
+    }
+}
 
 int main(void) {
 
