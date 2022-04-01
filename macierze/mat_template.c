@@ -38,7 +38,18 @@ void print_mat_ind(double A[][SIZE], int m, int n, const int indices[]);
 // 5.1
 // Calculate matrix product, AB = A X B
 // A[m][p], B[p][n]
-void mat_product(double A[][SIZE], double B[][SIZE], double AB[][SIZE], int m, int p, int n);
+void mat_product(double A[][SIZE], double B[][SIZE], double AB[][SIZE], int m, int p, int n) {
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            AB[i][j] = 0;
+            for (int k = 0; k < p; ++k) {
+                AB[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+
+}
 
 // Calculate matrix - vector product
 void mat_vec_product(double A[][SIZE], const double b[], double Ab[], int m, int n);
@@ -60,7 +71,49 @@ double gauss_simplified(double A[][SIZE], int n);
 // If max A[i][i] < eps, function returns 0.
 // If det != 0 && b != NULL && x != NULL then vector x should contain solution of Ax = b.
 
-double gauss(double A[][SIZE], const double b[], double x[], const int n, const double eps);
+double gauss(double A[][SIZE], const double b[], double x[], const int n, const double eps) {
+    int max_ind, temp;
+    double ratio;
+
+    int indices_arr[n];
+    for (int i = 0; i < n; ++i) {
+        indices_arr[i] = i;
+    }
+
+    for (int step = 0; step < n - 1; ++step) {
+
+        max_ind = step;
+        for (int i = step + 1; i < n; ++i) {
+            if (fabs(A[indices_arr[i]][step]) > fabs(A[indices_arr[max_ind]][step])) {
+                max_ind = i;
+            }
+        }
+        if (max_ind != step) {
+            temp = indices_arr[max_ind];
+            indices_arr[max_ind] = indices_arr[step];
+            indices_arr[step] = temp;
+        }
+
+        if (fabs(A[indices_arr[step]][step]) < eps) {
+            return 0;
+        }
+
+        for (int i = step + 1; i < n; ++i) {
+            ratio = A[indices_arr[i]][step] / A[indices_arr[step]][step];
+            for (int j = step; j < n; ++j) {
+                double hehe = ratio * A[indices_arr[step]][j];
+                A[indices_arr[i]][j] -= hehe;
+            }
+        }
+
+    }
+
+    double determinant = 1;
+    for (int i = 0; i < n; ++i) {
+        determinant *= A[indices_arr[i]][i];
+    }
+    // TU UZYJE matrix_inv
+}
 
 // 5.4
 // Returns the determinant; B contains the inverse of A (if det(A) != 0)
@@ -85,11 +138,11 @@ int main(void) {
 			mat_product(A, B, C, m, p, n);
 			print_mat(C, m, n);
 			break;
-		case 2:
-			scanf("%d", &n);
-			read_mat(A, n, n);
-			printf("%.4f\n", gauss_simplified(A, n));
-			break;
+//		case 2:
+//			scanf("%d", &n);
+//			read_mat(A, n, n);
+//			printf("%.4f\n", gauss_simplified(A, n));
+//			break;
 		case 3:
 			scanf("%d", &n);
 			read_mat(A,n, n);
@@ -98,12 +151,12 @@ int main(void) {
 			printf("%.4f\n", det);
 			if(det) print_vector(x, n);
 			break;
-		case 4:
-			scanf("%d", &n);
-			read_mat(A,n,n);
-			printf("%.4f\n",matrix_inv(A, B, n, eps));
-			print_mat(B, n, n);
-			break;
+//		case 4:
+//			scanf("%d", &n);
+//			read_mat(A,n,n);
+//			printf("%.4f\n",matrix_inv(A, B, n, eps));
+//			print_mat(B, n, n);
+//			break;
 		default:
 			printf("NOTHING TO DO FOR %d\n", to_do);
 			break;
