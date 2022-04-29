@@ -53,9 +53,34 @@ void print_mat(int rows, int cols, double *t) {
     }
 }
 
-int read_char_lines(char *tab[]);
+int read_char_lines(char *tab[]) {
+    char string[TAB_SIZE - 1];
+    char curr;
+    int main_tab_index = 0;
 
-void write_char_line(char *tab[], int n);
+    while((curr = (char)getchar()) != EOF) {
+        if (curr == '\n') {
+            if (strcspn(string, "\n") == 0) {
+                continue;
+            }
+            curr = '\0';
+            strncat(string, &curr, 1);
+            char *new_string = malloc(strlen(string) * sizeof(char) + 1);
+            strcpy(new_string, string);
+
+            tab[main_tab_index++] = new_string;
+            string[0] = '\0';
+        } else {
+            strncat(string, &curr, 1);
+        }
+    }
+
+    return main_tab_index;
+}
+
+void write_char_line(char *tab[], int n) {
+    printf("%s", tab[n - 1]);
+}
 
 void delete_lines(char *tab[], int line_count);
 
@@ -68,6 +93,9 @@ int read_dbl_lines_v1(double *ptr_tab[]) {
 
     while ((curr = (char)getchar()) != EOF) {
         if (curr == '\n') {
+            if (strcspn(string, "\n") == 0) {
+                continue;
+            }
             num = strtok(string, " ");
             while (num != NULL) {
                 continuous_tab[cont_index++] = atof(num);
@@ -86,9 +114,10 @@ int read_dbl_lines_v1(double *ptr_tab[]) {
 //    int ptr_index = 1, cont_index = 0;
 //    char string[TAB_SIZE - 1];
 //    char *end;
+//
 //    while (fgets(string, TAB_SIZE, stdin)) {
 //        continuous_tab[cont_index++] = strtod(string, &end);
-//        while (*end != '\n') {
+//        while (end != '\n') {
 //            continuous_tab[cont_index++] = strtod(end, &end);
 //        }
 //
@@ -98,6 +127,7 @@ int read_dbl_lines_v1(double *ptr_tab[]) {
 //            break;
 //        }
 //    }
+//
 //    return ptr_index;
 }
 
@@ -135,12 +165,12 @@ int main(void) {
 			lines_counter = read_dbl_lines_v1(ptr_table);
 			write_dbl_line_v1(ptr_table,n);
 			break;
-//		case 3:
-//			scanf("%d", &n);
-//			lines_counter = read_char_lines(char_lines_table);
-//			write_char_line(char_lines_table,n);
+		case 3:
+			scanf("%d", &n);
+			lines_counter = read_char_lines(char_lines_table);
+			write_char_line(char_lines_table,n);
 //			delete_lines(char_lines_table,lines_counter);
-//			break;
+			break;
 		default:
 			printf("NOTHING TO DO FOR %d\n", to_do);
 	}
