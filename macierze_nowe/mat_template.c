@@ -60,31 +60,52 @@ void write_char_line(char *tab[], int n);
 void delete_lines(char *tab[], int line_count);
 
 int read_dbl_lines_v1(double *ptr_tab[]) {
+    double *continuous_tab = ptr_tab[0];
     char curr;
-    char string[TAB_SIZE]; string[0] = '\0';
+    char string[TAB_SIZE - 1];
     char *num;
-    double arr[TAB_SIZE][TAB_SIZE];
-    int arr_row = 0, arr_index = 0, tab_index = 0;
+    int cont_index = 0, ptr_index = 0;
 
     while ((curr = (char)getchar()) != EOF) {
         if (curr == '\n') {
             num = strtok(string, " ");
             while (num != NULL) {
-                arr[arr_row][arr_index++] = atof(num);
+                continuous_tab[cont_index++] = atof(num);
                 num = strtok(NULL, " ");
             }
-            arr[arr_row][TAB_SIZE - 1] = arr_index;
-            ptr_tab[tab_index++] = arr[arr_row++];
+            ptr_tab[ptr_index++] = &continuous_tab[cont_index];
             string[0] = '\0';
         } else {
             strncat(string, &curr, 1);
         }
     }
+
+    return ptr_index;
+
+//    double *continuous_tab = ptr_tab[0];
+//    int ptr_index = 1, cont_index = 0;
+//    char string[TAB_SIZE - 1];
+//    char *end;
+//    while (fgets(string, TAB_SIZE, stdin)) {
+//        continuous_tab[cont_index++] = strtod(string, &end);
+//        while (*end != '\n') {
+//            continuous_tab[cont_index++] = strtod(end, &end);
+//        }
+//
+//        ptr_tab[ptr_index++] = &continuous_tab[cont_index];
+//
+//        if (feof(stdin)) {
+//            break;
+//        }
+//    }
+//    return ptr_index;
 }
 
 void write_dbl_line_v1(double *ptr_tab[], int n) {
-    for (int i = 0; i < ptr_tab[n - 1][TAB_SIZE - 1]; ++i) {
-        printf("%lf ", ptr_tab[n - 1][i]);
+    double *cont_tab = ptr_tab[n - 1];
+    int i = 0;
+    while (&cont_tab[i] != ptr_tab[n]) {
+        printf("%lf ", cont_tab[i++]);
     }
 }
 
