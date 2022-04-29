@@ -44,7 +44,7 @@ void read_mat(int rows, int cols, double *t) {
 void print_mat(int rows, int cols, double *t) {
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            printf("%lf", get(cols, i, j, t));
+            printf("%.2lf", get(cols, i, j, t));
             if (j != cols - 1) {
                 printf(" ");
             }
@@ -93,9 +93,9 @@ int read_dbl_lines_v1(double *ptr_tab[]) {
 
     while ((curr = (char)getchar()) != EOF) {
         if (curr == '\n') {
-            if (strcspn(string, "\n") == 0) {
-                continue;
-            }
+//            if (strcspn(string, "\n") == 0) {
+//                continue;
+//            }
             num = strtok(string, " ");
             while (num != NULL) {
                 continuous_tab[cont_index++] = atof(num);
@@ -135,7 +135,7 @@ void write_dbl_line_v1(double *ptr_tab[], int n) {
     double *cont_tab = ptr_tab[n - 1];
     int i = 0;
     while (&cont_tab[i] != ptr_tab[n]) {
-        printf("%lf ", cont_tab[i++]);
+        printf("%.2lf ", cont_tab[i++]);
     }
 }
 
