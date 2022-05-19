@@ -45,16 +45,22 @@ void reserve(Vector *vector, size_t new_capacity) {
 void resize(Vector *vector, size_t new_size) {
     if (new_size < vector->size) {
         vector->size = new_size;
+        return;
     } else if (new_size > vector->capacity) {
         reserve(vector, new_size);
-        vector->size = new_size;
+//        vector->size = new_size;
+//        int a = 0;
+    }
+    while (vector->size < new_size) {
+        ((int *)vector->data)[vector->size] = 0;
+        ++vector->size;
     }
 }
 
 // Add element to the end of the vector
 void push_back(Vector *vector, void *value) {
     if (vector->size == vector->capacity) {
-        resize(vector, vector->capacity * 2);
+        reserve(vector, vector->capacity * 2);
     }
     memcpy(vector->data + (vector->size * vector->element_size), value, vector->element_size);
     ++vector->size;
@@ -75,7 +81,7 @@ void pop_back(Vector *vector) {
 void insert(Vector *vector, int index, void *value) {
     if (index < 0 || index > vector->size) return;
     if (vector->size == vector->capacity) {
-        resize(vector, vector->capacity * 2);
+        reserve(vector, vector->capacity * 2);
     }
     memmove(vector->data + ((index + 1) * vector->element_size), vector->data + (index * vector->element_size),
             vector->element_size * (vector->size - index));
@@ -96,7 +102,7 @@ void erase(Vector *vector, int index) {
 void erase_value(Vector *vector, void *value, int(*cmp)(const void*, const void*)) {
     int i = 0;
     while (i < vector->size) {
-        if (cmp(vector->data + (i * vector->element_size), value)) {
+        if (cmp(vector->data + (i * vector->element_size), value) == 0) {
             erase(vector, i);
         } else ++i;
     }
@@ -115,7 +121,8 @@ void erase_if(Vector *vector, int (*predicate)(void *)) {
 // Request the removal of unused capacity
 void shrink_to_fit(Vector *vector) {
     if (vector->size < vector->capacity) {
-        reserve(vector, vector->size);
+        vector->data = realloc(vector->data, vector->size * vector->element_size);
+        vector->capacity = vector->size;
     }
 }
 
@@ -128,38 +135,107 @@ void print_vector_int(Vector *vector) {
 }
 
 // Print char vector
-void print_vector_char(Vector *vector);
+void print_vector_char(Vector *vector) {
+    printf("%d\n", vector->capacity);
+    for (int i = 0; i < vector->size; ++i) {
+        printf("%c ", ((char*) vector->data)[i]);
+    }
+}
 
 // Print vector of Person
-void print_vector_person(Vector *vector);
+void print_vector_person(Vector *vector) {
+    printf("%d\n", vector->capacity);
+    for (int i = 0; i < vector->size; ++i) {
+        printf("%d ", ((Person *) vector->data)[i].age);
+        printf("%s ", ((Person *) vector->data)[i].first_name);
+        printf("%s\n", ((Person *) vector->data)[i].last_name);
+    }
+}
 
 // integer comparator - increasing order
 int int_cmp(const void *v1, const void *v2) {
     int a = *(int*)v1;
-    int b = *(int*)v1;
-    return a == b ? 1 : 0;
+    int b = *(int*)v2;
+    return a - b;
 }
 
 // char comparator - lexicographical order (case sensitive)
-int char_cmp(const void *v1, const void *v2);
+int char_cmp(const void *v1, const void *v2) {
+    char a = *(char*)v1;
+    char b = *(char*)v2;
+    return a - b;
+}
 
 // Person comparator:
 // Sort according to age (decreasing)
 // When ages equal compare first name and then last name
-int person_cmp(const void *p1, const void *p2);
+int person_cmp(const void *p1, const void *p2) {
+    Person a = *(Person *)p1;
+    Person b = *(Person *)p2;
+
+    if (b.age - a.age) {
+        return b.age - a.age;
+    }
+
+    int i=0;
+    while (1) {
+        if (a.first_name[i] - b.first_name[i]) {
+            return a.first_name[i] - b.first_name[i];
+        }
+        if (a.first_name[i] == b.first_name[i] && a.first_name[i] == '\0') {
+            break;
+        }
+        ++i;
+    }
+
+    i=0;
+    while (1) {
+        if (a.last_name[i] - b.last_name[i]) {
+            return a.last_name[i] - b.last_name[i];
+        }
+        if (a.last_name[i] == b.last_name[i] && a.last_name[i] == '\0') {
+            break;
+        }
+        ++i;
+    }
+    return 0;
+}
 
 // predicate: check if number is even
 int is_even(void *value) {
     int a = *(int*)value;
     // 1 gdy parzysta, 0 gdy nieparzysta
-    return a % 2 ? 1 : 0;
+    return (a + 1) % 2;
 }
 
 // predicate: check if char is a vowel
-int is_vowel(void *value);
+int is_vowel(void *value) {
+    char vowels[12] = {'a',
+                       'e',
+                       'i',
+                       'o',
+                       'u',
+                       'y',
+                       'A',
+                       'E',
+                       'I',
+                       'O',
+                       'U',
+                       'Y'};
+
+    char a = *(char *)value;
+
+    for (int i = 0; i < 12; ++i) {
+        if (a == vowels[i]) return 1;
+    }
+    return 0;
+}
 
 // predicate: check if person is older than 25
-int is_older_than_25(void *person);
+int is_older_than_25(void *person) {
+    Person a = *(Person *)person;
+    return a.age > 25 ? 1 : 0;
+}
 
 // -------------------------------------------------------------
 
@@ -240,18 +316,18 @@ int main(void) {
 			print_vector_int(&vector_int);
 			free(vector_int.data);
 			break;
-//		case 2:
-//			init_vector(&vector_char, 2, sizeof(char));
-//			vector_test(&vector_char, n, read_char, char_cmp, is_vowel);
-//			print_vector_char(&vector_char);
-//			free(vector_char.data);
-//			break;
-//		case 3:
-//			init_vector(&vector_person, 2, sizeof(Person));
-//			vector_test(&vector_person, n, read_person, person_cmp, is_older_than_25);
-//			print_vector_person(&vector_person);
-//			free(vector_person.data);
-//			break;
+		case 2:
+			init_vector(&vector_char, 2, sizeof(char));
+			vector_test(&vector_char, n, read_char, char_cmp, is_vowel);
+			print_vector_char(&vector_char);
+			free(vector_char.data);
+			break;
+		case 3:
+			init_vector(&vector_person, 2, sizeof(Person));
+			vector_test(&vector_person, n, read_person, person_cmp, is_older_than_25);
+			print_vector_person(&vector_person);
+			free(vector_person.data);
+			break;
 		default:
 			printf("Nothing to do for %d\n", to_do);
 			break;
