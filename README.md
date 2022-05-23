@@ -1,3 +1,3 @@
 Programowanie Imperatywne
 
-Repo do zadań na Programowanie Imperatywne z M. Dekster, 2. semestr 1. rok
+repo do zadań na PI
